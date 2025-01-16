@@ -2,10 +2,13 @@ from font_styling import *  # Importar estilos para formatear la salida en conso
 
 # Función para mostrar el menú principal del juego
 def menu():
-    # Mostrar el título del menú en negrita
+    """
+    Muestra las opciones disponibles en el menú 
+    y permite al usuario seleccionar una.
+    
+    """
     print(f"\n{negrilla}MENÚ{reset}")
     
-    # Lista de opciones disponibles en el menú
     opciones = [
         "1. Partida modo solitario",  # Opción para jugar solo
         "2. Partida 2 Jugadores",      # Opción para jugar en modo multijugador
@@ -26,8 +29,6 @@ def menu():
             if 1 <= opcion_menu <= 4:
                 return opcion_menu  # Retornar la opción seleccionada
             else:
-                # Mensaje de error si la opción está fuera del rango
                 print(f"\n{rojo}Opción inválida. Por favor, elige una opción entre 1 y 4.{reset}")
         except ValueError:
-            # Mensaje de error si la entrada no es un número
             print(f"\n{rojo}Entrada no válida. Por favor, introduce un número.{reset}")
