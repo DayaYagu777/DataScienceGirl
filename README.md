@@ -1,4 +1,5 @@
 # ----- JUEGO ADIVINA EL NÚMERO -----
+# AUTOR: DAYANA YAGUANA
 
 ## Descripción del Juego
 ¡Bienvenido al juego "Adivina el Número"! Un emocionante reto donde podrás poner a prueba tus habilidades de adivinanza. 
