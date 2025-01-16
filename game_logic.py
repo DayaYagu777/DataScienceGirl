@@ -1,24 +1,41 @@
+# Importa librerías
 import random
 import getpass
-from terminal_clean import limpiar_terminal_1s, limpiar_terminal_2s, limpiar_terminal
-from game_results import *
-from user_menu import *
-from font_styling import *
 
-# Variables globales para la dificultad y puntajes
-global dificultad, puntaje_gana, puntaje_pierde
+# Importar módulos del usuario
+from font_styling import *
+from terminal_clean import limpiar_terminal_1s, limpiar_terminal_2s, limpiar_terminal
+from user_menu import *
+from game_results import *
+
+'''
+    Este módulo contiene la lógica de programación del juego de adivinanza de números.
+
+    Funciones disponibles:
+        - mostrar_bienvenida
+        - submenu
+        - establecer_intentos
+        - mensaje_ganar
+        - mensaje_perder
+        - modo_solitario
+        - modo_partida_dos_jugadores
+    '''
 
 def mostrar_bienvenida(nombre):
     """Muestra un mensaje de bienvenida al jugador."""
     print(f"\n{rojo}BIENVENIDO, {nombre}!{reset}")
-    print("\nADIVINA EL NÚMERO")
-    print("-----------------------------")
 
 # Función para el submenú de dificultad
 def submenu():
-    """Muestra las opciones de dificultad y permite al usuario seleccionar una."""
+    """Muestra las opciones de dificultad y permite al usuario seleccionar una.
+
+    Variable global:
+        dificultad (int): Nivel de dificultad seleccionado (1, 2, 3).
+    """
+
     global dificultad
-    ancho = 20  # Ancho del marco para imprimir las opciones
+
+    ancho = 20 
 
     # Imprimir el marco superior
     print("+" + "-" * (ancho - 2) + "+")
@@ -44,14 +61,23 @@ def submenu():
         try:
             dificultad = int(input("\nElige la opción (1,2,3) ---> "))
             if 1 <= dificultad <= 3:
-                return dificultad  # Retornar la dificultad elegida
+                return dificultad
             else:
                 print(f"\n{rojo}Opción inválida. Por favor, elige una opción entre 1 y 3.{reset}")
         except ValueError:
             print(f"\n{rojo}Entrada no válida. Por favor, introduce un número.{reset}")
 
 def establecer_intentos(dificultad):
-    """Establece el número de intentos y puntajes según la dificultad seleccionada."""
+    """
+    Establece el número de intentos y puntajes según la dificultad seleccionada.
+    
+    Variables globales:
+        puntaje_gana (int): Puntaje obtenido al ganar.
+        puntaje_pierde (int): Puntaje obtenido al perder.
+    
+    Retorna:
+        int: Número de intentos permitidos según la dificultad.
+    """
     global puntaje_gana, puntaje_pierde
 
     # Definir intentos y puntajes según la dificultad
@@ -71,15 +97,15 @@ def establecer_intentos(dificultad):
         print(f"{rojo}Dificultad no válida.{reset}")
         return 0
 
-def grafico_ganar(puntaje):
-    """Muestra un gráfico de barras simple cuando el jugador gana."""
+def mensaje_ganar(puntaje):
+    """Mensaje cuando el jugador gana"""
     print(f"\n{verde}¡Has ganado! En esta partida:{reset}")
     print("Puntos: " + str(puntaje) + "pt")
     print(f"{rojo}" + "█" * puntaje + f"{reset}")  # Gráfico de barras simple
     limpiar_terminal_2s()
 
-def grafico_perder(intentos, puntaje):
-    """Muestra un gráfico de barras simple cuando el jugador pierde."""
+def mensaje_perder(intentos, puntaje):
+    """Mensaje cuando el jugador pierde"""
     print(f"\n{rojo}¡Has perdido! En esta partida:{reset}")
     print("Intentos agotados: " + str(intentos) + "\nPuntos: " + str(puntaje) + "pt")
     print(f"{rojo}" + "░" * puntaje + f"{reset}")  # Gráfico de barras simple
@@ -87,19 +113,23 @@ def grafico_perder(intentos, puntaje):
 
 # Función para jugar a adivinar el número (modo solitario)
 def modo_solitario(intentos, nombre):
-    """Implementa el modo solitario del juego, donde el jugador intenta adivinar un número."""
+
+    """Implementa el modo solitario del juego, 
+    donde el jugador intenta adivinar un número generado al azar."""
+
     global puntaje
     num_gener = random.randint(1, 1000)  # Generar un número aleatorio entre 1 y 1000
     limpiar_terminal()
     print("\nHa iniciado el juego! Tienes {} intentos.\n".format(intentos))
 
+    # Inicio del bucle hasta ganar o agotar los intentos
     for intento in range(intentos):
         try:
             num_user = int(input("\nIngresa un número entre 1 y 1000: "))
             if 1 <= num_user <= 1000:
                 if num_user == num_gener:
                     puntaje = puntaje_gana
-                    grafico_ganar(puntaje)
+                    mensaje_ganar(puntaje)
                     guardar_resultados(nombre, 'Modo solitario', dificultad, 'Ganó', int(puntaje))
                     return
                 elif num_user > num_gener:
@@ -117,15 +147,22 @@ def modo_solitario(intentos, nombre):
         except ValueError:
             print(f"\n{rojo}Entrada no válida. Por favor, introduce un número.{reset}")
 
-    # Si se agotan los intentos
+    # Si se agotan los intentos, pierde
     puntaje = puntaje_pierde
-    grafico_perder(intentos, puntaje)
+    mensaje_perder(intentos, puntaje)
     guardar_resultados(nombre, 'Modo solitario', dificultad, 'Perdió', int(puntaje))
 
 
 # Función para jugar a adivinar el número (modo dos jugadores)
 def modo_partida_dos_jugadores(intentos,nombre):
-    """Implementa el modo partida dos jugadores, donde el jugador intenta adivinar un número."""
+    """
+    Implementa el modo partida dos jugadores, 
+    donde el jugador 2 intenta adivinar el número ingresado por el jugador 1
+    
+    Variable global:
+        puntaje (int): puntaje por partida
+    """
+
     global puntaje
     num_user1 = int(getpass.getpass("Usuario 1: Ingresa un número entre 1 y 1000: "))
 
@@ -137,7 +174,7 @@ def modo_partida_dos_jugadores(intentos,nombre):
             if 1 <= num_user2 <= 1000:
                 if num_user1 == num_user2:
                     puntaje = puntaje_gana
-                    grafico_ganar(puntaje)
+                    mensaje_ganar(puntaje)
                     guardar_resultados(nombre, 'Modo dos jugadores', dificultad, 'Ganó', int(puntaje))
                     return
                 elif num_user1 > num_user2:
@@ -155,6 +192,7 @@ def modo_partida_dos_jugadores(intentos,nombre):
         except ValueError:
             print(f"\n{rojo}Entrada no válida. Por favor, introduce un número.{reset}")
 
+    # Si se agotan los intentos, pierde
     puntaje = puntaje_pierde
-    grafico_perder(intentos, puntaje)
+    mensaje_perder(intentos, puntaje)
     guardar_resultados(nombre, 'Modo dos jugadores', dificultad, 'Perdió', int(puntaje))
